@@ -1,4 +1,6 @@
-#include "main.h" 
+#include <avr/io.h>
+#include <util/delay.h>
+#include "USART.h"
 
 #define BUFFER_SIZE  16
 
@@ -31,42 +33,87 @@ enum BufferStatus bufferRead(uint8_t *byte){
 	return BUFFER_OK;
 }
 
+void dumpBuffer(void){
+
+	for (uint8_t i=0; i<BUFFER_SIZE; i++){
+		if (buffer.oldest_index == buffer.newest_index && buffer.newest_index == i){
+			transmitByte('=');
+		} else  if (buffer.oldest_index == i){
+			transmitByte('[');
+		} else if (buffer.newest_index == i){
+			transmitByte(']');
+		} else {
+			transmitByte('.');
+		}
+	}
+	printString("\n");
+
+	for (uint8_t i=0; i<BUFFER_SIZE; i++){
+			transmitByte(buffer.data[i]);
+	}
+	printString("\n");
+}
+
+
 int main(void) {
 
 	initUSART();
 	_delay_ms(200);
-	printString("Buffer Tester!\n");
 
-	// String is too long.  Watch how it deals with overflow.
-	uint8_t localString[27] = "abcdefghijklmnopqrstuvwxyz";
 	uint8_t i;
 	uint8_t tempCharStorage;
-	enum BufferStatus bufferStatus;
 
 	while (1) {
 
-		// Fill up (over-fill) buffer
-		for (i=0; i<sizeof(localString); i++){
-			bufferStatus = bufferWrite(localString[i]);
-			// Watch how the status changes from 0 (OK) to 2 (FULL)
-			printString("Byte number: ");
-			printByte(i);
-			printString(" ");
-			printByte(bufferStatus);
+		dumpBuffer();
+		printString("  Demo: adding characters to buffer\n");
+		uint8_t coolString[] = "Howdy";
+		i = 0;
+		while(i < sizeof(coolString) - 1){
+			bufferWrite(coolString[i]);
+			++i;
+			dumpBuffer();
+		}
+
+		printString("  Demo: reading out the first three characters\n");
+		for (i = 0; i<3 ; i++){	
+			bufferRead(&tempCharStorage);
+			transmitByte(tempCharStorage);	
 			printString("\n");
+			dumpBuffer();
 		}
-		// Here's a demo of testing when buffer is empty
-		//  to print out the whole thing.
-		// And notice that the buffer fills up with 15 characters 
-		while (1) {
-			bufferStatus = bufferRead(&tempCharStorage);
-			if (bufferStatus == BUFFER_EMPTY){
-				break;
-			} else {
-				transmitByte(tempCharStorage);	
-			}
+
+		printString("  Demo: adding more characters to buffer\n");
+		uint8_t anotherString[] = "Hello";	
+		i = 0;
+		while(i < sizeof(anotherString) - 1){
+			bufferWrite(anotherString[i]);
+			++i;
+			dumpBuffer();
 		}
-		break;
+
+		// And read it back out using return code
+		printString("  Demo: reading everything back out\n");
+		while (bufferRead(&tempCharStorage) == BUFFER_OK){
+			transmitByte(tempCharStorage);	
+		}
+		printString("\n");
+		
+		dumpBuffer();
+		printString("  Demo: empty! (newest = oldest)\n");
+
+		// Fill up buffer, using return code
+		i = 0;
+		while(bufferWrite('A'+i) == BUFFER_OK){
+			++i;
+			dumpBuffer();
+		}
+
+		printString("  Note: never fills up whole buffer\n");
+		printString("  it's full when first index equals last\n");
+
+		return 0;
+
 	}                                                  /* End event loop */
 	return 0;                              /* This line is never reached */
 }

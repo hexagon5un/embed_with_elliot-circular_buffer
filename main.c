@@ -32,55 +32,25 @@ ISR(USART_UDRE_vect){
 	}
 }
 
-/* If something in RX buffer, copy it into TX */
-static inline void echoReceived(volatile struct Buffer *rx_buffer_p, 
-								volatile struct Buffer *tx_buffer_p);
 
 
 int main(void) {
+	enum BufferStatus status;
+	uint8_t input_byte;
 
 	initUSART();
 	initUSART_interrupts();
 	_delay_ms(200);
 
-	// Fill hello string into tx buffer
-	uint8_t helloString[] = "Hello World! This is too long!";
-	for(uint8_t i=0; i < sizeof(helloString); i++){
-		bufferWrite(&tx_buffer, helloString[i]);
-	}
-	// And then transmit it
-	enable_transmission();
-
 	while (1) {
 
-		echoReceived(&rx_buffer, &tx_buffer);
-		/*  The delay simulates doing something more important.
-		 *  Try typing as fast as you can here.  
-		 *  You'll see it being returned every 1/2 second 
-		 *   as the buffer gets processed. 
-		 *  If you type fast enough, you can overflow the rx_buffer. */
-		_delay_ms(500);
+		status = bufferRead(&rx_buffer, &input_byte);
+		if (status == BUFFER_OK){
+			bufferWrite(&tx_buffer, input_byte);
+			enable_transmission();
+		}
 
 	}                                                  /* End event loop */
 	return 0;                              /* This line is never reached */
-}
-
-
-/* If something in RX buffer, copy it into TX */
-static inline void echoReceived(volatile struct Buffer *rx_buffer_p, 
-		volatile struct Buffer *tx_buffer_p){
-	uint8_t one_character;
-	while(1) {
-		/*  read in the received data, if any */
-		enum BufferStatus status_rx = bufferRead(rx_buffer_p, &one_character);
-		/* jump out when the buffer is empty */
-		if (status_rx == BUFFER_EMPTY){  
-			break;
-		}
-		/*  otherwise write received byte to the tx buffer
-		 *  and re-enable the transmission interrupt routine */
-		bufferWrite(tx_buffer_p, one_character);
-		enable_transmission();
-	} 
 }
 

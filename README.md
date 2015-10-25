@@ -19,9 +19,7 @@ To compile / flash C code on Arduino:
 
 There are multiple demo versions hidden in the history of this project.  Check them out!
 
-You can cut/paste these links 
-
-* [Naive Demo (a793508)](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/a793508bc38481f820146f62dcdacfbeef1df6ee): with lots of printing.  Good for getting a feel for the circular buffer code.
+* [Naive Demo (a793508)](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/a793508bc38481f820146f62dcdacfbeef1df6ee): with lots of printing.  Good to watch it run and figure out what's going on.  Probably too long, sorry.
 
 * [Loopback Demo (f33be28)](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/f33be289cb8738c8aa881feaf8aeadc783984841): shows how two buffers (one for receiving and one for transmitting) and some interrupt code can handle serial input and output.  This is a lot like what the Arduino libraries do under the hood, but written less generally and much more transparently, IMO.
 

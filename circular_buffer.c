@@ -29,3 +29,16 @@ enum BufferStatus bufferRead(volatile struct Buffer *buffer, uint8_t *byte){
 	return BUFFER_OK;
 }
 
+enum BufferStatus bufferPeek(volatile struct Buffer *buffer, uint8_t *byte){
+
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+
+		uint8_t last_index = ((BUFFER_SIZE + (buffer->newest_index) - 1) % BUFFER_SIZE);
+		if (buffer->newest_index == buffer->oldest_index){
+			return BUFFER_EMPTY;
+		}
+		*byte = buffer->data[last_index];
+	}
+	return BUFFER_OK;
+}
+

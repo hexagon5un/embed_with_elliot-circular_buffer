@@ -36,5 +36,6 @@ struct Buffer {
 
 enum BufferStatus bufferWrite(volatile struct Buffer *buffer, uint8_t byte);
 enum BufferStatus bufferRead(volatile struct Buffer *buffer, uint8_t *byte);
+enum BufferStatus bufferPeek(volatile struct Buffer *buffer, uint8_t *byte);
 
 

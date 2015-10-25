@@ -44,12 +44,17 @@ int main(void) {
 
 	while (1) {
 
-		status = bufferRead(&rx_buffer, &input_byte);
-		if (status == BUFFER_OK){
-			bufferWrite(&tx_buffer, input_byte);
-			enable_transmission();
+		// Check if the last character typed was a space
+		status = bufferPeek(&rx_buffer, &input_byte);
+		if (status == BUFFER_OK && input_byte == ' '){
+			do {	
+				status = bufferRead(&rx_buffer, &input_byte);
+				if (status == BUFFER_OK){
+					bufferWrite(&tx_buffer, input_byte);
+					enable_transmission();
+				}
+			} while (status == BUFFER_OK);
 		}
-
 	}                                                  /* End event loop */
 	return 0;                              /* This line is never reached */
 }

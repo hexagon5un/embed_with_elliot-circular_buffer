@@ -19,6 +19,11 @@ To compile / flash C code on Arduino:
 
 There are multiple demo versions hidden in the history of this project.  Check them out!
 
+* [Naive Demo](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/a793508bc38481f820146f62dcdacfbeef1df6ee) with lots of printing.  Good for getting a feel for the circular buffer code.
+
+* [Loopback Demo](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/f33be289cb8738c8aa881feaf8aeadc783984841)shows how two buffers (one for receiving and one for transmitting) and some interrupt code can handle serial input and output.  This is a lot like what the Arduino libraries do under the hood, but written less generally and much more transparently, IMO.
+
+* [Words Demo](https://github.com/hexagon5un/embed_with_elliot-circular_buffer/commit/55ab72683633151d47e069111cc883e0645cd7e3): Uses interrupt-driven RX and TX and the `bufferPeek()` function to print out what you type in only after a complete word has been sent.
 
 
 
@@ -26,7 +31,7 @@ There are multiple demo versions hidden in the history of this project.  Check t
 
 Most of the examples depend on having an instantaneous-response serial terminal program.  Unfortunately, you Arduino folks are out in the cold here -- Arduino's default serial monitor program only responds when you hit the "Enter" key.  
 
-I use a python module ([PySerial](https://wiki.python.org/moin/PySerial)) that just happens to have a nice built-in serial terminal emulator program.  This will work anywhere you've got Python installed.
+I use a python module ([PySerial](https://wiki.python.org/moin/PySerial)) that just happens to have a nice built-in serial terminal emulator program.  This will work anywhere you've got Python installed:  `python -m serial.tools.miniterm --cr $PORT $BAUD`
 
 On Windows, try [Realterm](http://realterm.sourceforge.net/) or [Tera Term](http://ttssh2.osdn.jp/) if you're not running XP anymore.  (R.I.P. Hyperterminal.)
 

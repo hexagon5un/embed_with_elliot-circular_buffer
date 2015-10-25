@@ -47,13 +47,15 @@ int main(void) {
 		// Check if the last character typed was a space
 		status = bufferPeek(&rx_buffer, &input_byte);
 		if (status == BUFFER_OK && input_byte == ' '){
-			do {	
+			while(1) {	
 				status = bufferRead(&rx_buffer, &input_byte);
 				if (status == BUFFER_OK){
 					bufferWrite(&tx_buffer, input_byte);
-					enable_transmission();
+				} else {
+					break;
 				}
-			} while (status == BUFFER_OK);
+			} 
+			enable_transmission();
 		}
 	}                                                  /* End event loop */
 	return 0;                              /* This line is never reached */

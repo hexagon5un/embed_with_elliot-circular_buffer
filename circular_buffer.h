@@ -1,4 +1,3 @@
-#include <util/atomic.h>
 #include <avr/io.h>
 #define BUFFER_SIZE  16
 

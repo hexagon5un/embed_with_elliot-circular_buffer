@@ -1,15 +1,5 @@
 #include "cbuffer.h"
 
-#if (BUFFER_ELEMENT_WIDTH == 32)
-/* 32-bit wide elements */
-
-#elif (BUFFER_ELEMENT_WIDTH == 16)
-/* 16 bit wide elements */
-
-#else
-/* 8 bit wide elements */
-
-
 BufferStatus BUF_init(Buffer* b){
     BufferStatus status = BUFFER_EMPTY;
     
@@ -38,6 +28,76 @@ BufferStatus BUF_status(Buffer* b){
     
     return status;
 }
+
+#if (BUFFER_ELEMENT_WIDTH == 32)
+/* 32-bit wide elements */
+
+BufferStatus BUF_write(Buffer* b, uint32_t writeValue){
+    BufferStatus status;
+    
+    uint16_t new_index = (b->newest_index + 1) & ~BUFFER_LENGTH;
+    if(new_index == b->oldest_index){
+        status = BUFFER_FULL;
+    }else{
+        b->data[new_index] = writeValue;
+        b->newest_index = new_index;
+        status = BUFFER_OK;
+    }
+    
+    return status;
+}
+
+BufferStatus BUF_read(Buffer* b, uint32_t* readValue){
+    BufferStatus status;
+    
+    if(b->newest_index == b->oldest_index){
+        status = BUFFER_EMPTY;
+        *readValue = 0;
+    }else{
+        *readValue = b->data[b->oldest_index];
+        b->oldest_index++;
+        b->oldest_index &= ~BUFFER_LENGTH;
+    }
+    
+    return status;
+}
+
+#elif (BUFFER_ELEMENT_WIDTH == 16)
+/* 16 bit wide elements */
+
+BufferStatus BUF_write(Buffer* b, uint16_t writeValue){
+    BufferStatus status;
+    
+    uint16_t new_index = (b->newest_index + 1) & ~BUFFER_LENGTH;
+    if(new_index == b->oldest_index){
+        status = BUFFER_FULL;
+    }else{
+        b->data[new_index] = writeValue;
+        b->newest_index = new_index;
+        status = BUFFER_OK;
+    }
+    
+    return status;
+}
+
+BufferStatus BUF_read(Buffer* b, uint16_t* readValue){
+    BufferStatus status;
+    
+    if(b->newest_index == b->oldest_index){
+        status = BUFFER_EMPTY;
+        *readValue = 0;
+    }else{
+        *readValue = b->data[b->oldest_index];
+        b->oldest_index++;
+        b->oldest_index &= ~BUFFER_LENGTH;
+    }
+    
+    return status;
+}
+
+#else
+/* 8 bit wide elements */
+
 
 BufferStatus BUF_write(Buffer* b, uint8_t writeValue){
     BufferStatus status;

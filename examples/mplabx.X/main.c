@@ -34,8 +34,6 @@ int main(void) {
     BUF_read(&b, &a);
     BUF_read(&b, &a);
     
-    
-    
     return 0;
 }
 

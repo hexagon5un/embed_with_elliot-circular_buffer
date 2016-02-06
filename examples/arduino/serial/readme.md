@@ -4,10 +4,16 @@ This is a reworked example from the original source of the circular code and buf
 
 # Instructions #
 
+## Arduino ##
+
 1. Create a new sketch, delete everything (the setup and loop functions) from the default .ino file, and quit Arduino
 2. Copy the .c and .h files over to the sketch's directory
 3. Open the Arduino IDE again and you'll see the code opened up for you in tabs
 4. Compile as usual. Edit. Flash. Play around.
+
+## AVR ##
+
+I believe that the Makefile and sh script should still work.  I have not edited them from the original.  It would be nice to have a check on this.
 
 # Notes #
 

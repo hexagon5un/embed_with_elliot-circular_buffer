@@ -6,7 +6,10 @@ One minor improvement in functionality is that this buffer will use the entire b
 
 The original repository can be found at https://github.com/hexagon5un/embed_with_elliot-circular_buffer along with the accompanying article at https://hackaday.com/2015/10/29/embed-with-elliot-going-round-with-circular-buffers/
 
+Additional information specific to this library and the differences between it and Elliot's original work may be found at http://www.forembed.com/circular-buffers/
+
 # Status #
+
 This library is useful for creating one or more circular buffers.  At this time, I believe that the library is well.
 
 # Using this library #

@@ -1,8 +1,6 @@
 #include "cbuffer.h"
 
 BufferStatus BUF_init(Buffer* b){
-    BufferStatus status = BUFFER_EMPTY;
-    
     /* erase the buffer */
     uint16_t i;
     for(i = 0; i < BUFFER_LENGTH; i++){
@@ -11,8 +9,9 @@ BufferStatus BUF_init(Buffer* b){
     
     b->newest_index = 0;
     b->oldest_index = 0;
+    b->status = BUFFER_EMPTY;
     
-    return status;
+    return b->status;
 }
 
 BufferStatus BUF_status(Buffer* b){
@@ -30,20 +29,46 @@ BufferStatus BUF_status(Buffer* b){
 }
 
 int32_t BUF_emptySlots(Buffer* b){
-    int16_t fullSlots = b->newest_index - b->oldest_index;
+    int16_t emptySlots = 0;
     
-    if(fullSlots < 0){
-        fullSlots = BUFFER_LENGTH + 1 - fullSlots;
+    if(b->status == BUFFER_EMPTY){
+        emptySlots = BUFFER_LENGTH;
+    }else if(b->status == BUFFER_FULL){
+        emptySlots = 0;
+    }else{
+        /* count the empty slots */
+        int16_t index = b->newest_index;
+        
+        while(index != b->oldest_index){
+            /* index = (index + 1) % BUFFER_LENGTH */
+            index++;
+            index &= ~BUFFER_LENGTH;
+            emptySlots++;
+        }
     }
     
-    return(uint32_t)fullSlots;
+    return(uint32_t)emptySlots;
 }
 
 int32_t BUF_fullSlots(Buffer* b){
-    int16_t fullSlots = (int16_t)b->oldest_index - (int16_t)b->newest_index;
+    int16_t fullSlots = 0;
     
-    if(fullSlots < 0){
-        fullSlots = BUFFER_LENGTH + 1 - fullSlots;
+    if(b->status == BUFFER_EMPTY){
+        fullSlots = 0;
+    }else if(b->status == BUFFER_FULL){
+        fullSlots = BUFFER_LENGTH;
+    }else{
+        /* count the empty slots */
+        int16_t index = b->oldest_index;
+        
+        while(index != b->newest_index){
+            /* index = (index + 1) % BUFFER_LENGTH */
+            index++;
+            index &= ~BUFFER_LENGTH;
+            fullSlots++;
+        }
+        
+        
     }
     
     return(uint32_t)fullSlots;

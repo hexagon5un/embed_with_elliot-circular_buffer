@@ -9,6 +9,7 @@ void showStatus(void);
 int main(void) {
     uint8_t i;
     BUF_init(&b);
+    showStatus();
     
     uint8_t values0[4] = {10,9,8,7};
     uint8_t values1[4] = {0,0,0,0};
@@ -16,11 +17,13 @@ int main(void) {
     /* write 4 values to the buffer */
     for(i = 0; i < 4; i++){
         BUF_write(&b, values0[i]);
+        showStatus();
     }
     
     /* read 4 values from the buffer values */
     for(i=0; i < 4; i++){
         values1[i] = BUF_read(&b);
+        showStatus();
     }
     
     /* test for array equality */
@@ -35,11 +38,19 @@ int main(void) {
     /* write 8 values to the buffer */
     for(i = 0; i < 8; i++){
         BUF_write(&b, values2[i]);
+        showStatus();
+    }
+    
+    /* attempt to write another 4 values */
+    for(i = 0; i < 4; i++){
+        BUF_write(&b, 100);
+        showStatus();
     }
     
     /* read 8 values from the buffer values */
     for(i=0; i < 8; i++){
         values3[i] = BUF_read(&b);
+        showStatus();
     }
     
     /* test for array equality */
@@ -47,9 +58,7 @@ int main(void) {
         if(values2[i] != values3[i])
             while(1);
     }
-    
-    
-    
+
     return 0;
 }
 

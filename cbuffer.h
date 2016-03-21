@@ -24,12 +24,14 @@ typedef struct buffer {
 	uint32_t data[BUFFER_LENGTH];
 	uint16_t newest_index;      // buffer could be long, use a 16-bit var here
 	uint16_t oldest_index;
+    BufferStatus status;
 } Buffer;
 #elif (BUFFER_ELEMENT_WIDTH == 16)
 typedef struct buffer {
 	uint16_t data[BUFFER_LENGTH];
 	uint16_t newest_index;      // buffer could be long, use a 16-bit var here
 	uint16_t oldest_index;
+    BufferStatus status;
 } Buffer;
 
 #else
@@ -37,23 +39,26 @@ typedef struct buffer {
 	uint8_t data[BUFFER_LENGTH];
 	uint16_t newest_index;      // buffer could be long, use a 16-bit var here
 	uint16_t oldest_index;
+    BufferStatus status;
 } Buffer;
 #endif
 
 BufferStatus BUF_init(Buffer* b);
 BufferStatus BUF_status(Buffer* b);
+int32_t BUF_emptySlots(Buffer* b);
+int32_t BUF_fullSlots(Buffer* b);
 
 #if (BUFFER_ELEMENT_WIDTH == 32)
 BufferStatus BUF_write(Buffer* b, uint32_t writeValue);
-BufferStatus BUF_read(Buffer* b, uint32_t* readValue);
+uint32_t BUF_read(Buffer* b);
 
 #elif (BUFFER_ELEMENT_WIDTH == 16)
 BufferStatus BUF_write(Buffer* b, uint16_t writeValue);
-BufferStatus BUF_read(Buffer* b, uint16_t* readValue);
+uint16_t BUF_read(Buffer* b);
 
 #else
 BufferStatus BUF_write(Buffer* b, uint8_t writeValue);
-BufferStatus BUF_read(Buffer* b, uint8_t* readValue);
+uint8_t BUF_read(Buffer* b);
 
 #endif
 

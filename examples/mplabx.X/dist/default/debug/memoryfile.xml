@@ -4,15 +4,15 @@
   <executable name="dist/default/debug/mplabx.X.debug.elf">
     <memory name="data">
       <units>bytes</units>
-      <length>1536</length>
-      <used>0</used>
-      <free>1536</free>
+      <length>8192</length>
+      <used>222</used>
+      <free>7970</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
-      <length>7680</length>
-      <used>693</used>
-      <free>6987</free>
+      <length>33018</length>
+      <used>7065</used>
+      <free>25953</free>
     </memory>
   </executable>
 </project>

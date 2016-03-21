@@ -53,29 +53,34 @@ int32_t BUF_fullSlots(Buffer* b){
 /* 32-bit wide elements */
 
 BufferStatus BUF_write(Buffer* b, uint32_t writeValue){
-    BufferStatus status;
-    
-    uint16_t new_index = (b->newest_index + 1) & ~BUFFER_LENGTH;
-    if(new_index == b->oldest_index){
-        status = BUFFER_FULL;
-    }else{
-        b->data[new_index] = writeValue;
-        b->newest_index = new_index;
-        status = BUFFER_OK;
+    if(b->status != BUFFER_FULL){
+        b->data[b->newest_index] = writeValue;
+        b->newest_index += 1;
+        b->newest_index &= ~BUFFER_LENGTH;
+        
+        if(b->newest_index == b->oldest_index)
+            b->status = BUFFER_FULL;
+        else
+            b->status = BUFFER_OK;
     }
     
-    return status;
+    return b->status;
 }
 
 uint32_t BUF_read(Buffer* b){
     uint32_t readValue = 0;
     
-    if(b->newest_index != b->oldest_index){
+    if(b->status != BUFFER_EMPTY){
         readValue = b->data[b->oldest_index];
         b->oldest_index++;
         b->oldest_index &= ~BUFFER_LENGTH;
+        
+        if(b->newest_index == b->oldest_index)
+            b->status = BUFFER_EMPTY;
+        else
+            b->status = BUFFER_OK;
     }
-    
+        
     return readValue;
 }
 
@@ -83,29 +88,34 @@ uint32_t BUF_read(Buffer* b){
 /* 16 bit wide elements */
 
 BufferStatus BUF_write(Buffer* b, uint16_t writeValue){
-    BufferStatus status;
-    
-    uint16_t new_index = (b->newest_index + 1) & ~BUFFER_LENGTH;
-    if(new_index == b->oldest_index){
-        status = BUFFER_FULL;
-    }else{
-        b->data[new_index] = writeValue;
-        b->newest_index = new_index;
-        status = BUFFER_OK;
+    if(b->status != BUFFER_FULL){
+        b->data[b->newest_index] = writeValue;
+        b->newest_index += 1;
+        b->newest_index &= ~BUFFER_LENGTH;
+        
+        if(b->newest_index == b->oldest_index)
+            b->status = BUFFER_FULL;
+        else
+            b->status = BUFFER_OK;
     }
     
-    return status;
+    return b->status;
 }
 
 uint16_t BUF_read(Buffer* b){
     uint16_t readValue = 0;
     
-    if(b->newest_index != b->oldest_index){
+    if(b->status != BUFFER_EMPTY){
         readValue = b->data[b->oldest_index];
         b->oldest_index++;
         b->oldest_index &= ~BUFFER_LENGTH;
+        
+        if(b->newest_index == b->oldest_index)
+            b->status = BUFFER_EMPTY;
+        else
+            b->status = BUFFER_OK;
     }
-    
+        
     return readValue;
 }
 

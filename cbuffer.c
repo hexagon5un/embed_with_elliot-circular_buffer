@@ -1,25 +1,11 @@
 #include "cbuffer.h"
 
-BufferStatus BUF_init(Buffer* b){
-    /* erase the buffer */
-    uint16_t i;
-    for(i = 0; i < BUFFER_LENGTH; i++){
-        b->data[i] = 0;
-    }
-    
-    b->newest_index = 0;
-    b->oldest_index = 0;
-    b->status = BUFFER_EMPTY;
-    
-    return b->status;
-}
-
 BufferStatus BUF_status(Buffer* b){
     BufferStatus status;
     
     if(b->newest_index == b->oldest_index){
         status = BUFFER_EMPTY;
-    }else if(((b->newest_index + 1) & ~BUFFER_LENGTH) == b->oldest_index){
+    }else if(((b->newest_index + 1) & ~b->length) == b->oldest_index){
         status = BUFFER_FULL;
     }else{
         status = BUFFER_OK;
@@ -32,7 +18,7 @@ int32_t BUF_emptySlots(Buffer* b){
     int16_t emptySlots = 0;
     
     if(b->status == BUFFER_EMPTY){
-        emptySlots = BUFFER_LENGTH;
+        emptySlots = b->length;
     }else if(b->status == BUFFER_FULL){
         emptySlots = 0;
     }else{
@@ -40,9 +26,9 @@ int32_t BUF_emptySlots(Buffer* b){
         int16_t index = b->newest_index;
         
         while(index != b->oldest_index){
-            /* index = (index + 1) % BUFFER_LENGTH */
+            /* index = (index + 1) % b->length */
             index++;
-            index &= ~BUFFER_LENGTH;
+            index &= ~b->length;
             emptySlots++;
         }
     }
@@ -56,15 +42,15 @@ int32_t BUF_fullSlots(Buffer* b){
     if(b->status == BUFFER_EMPTY){
         fullSlots = 0;
     }else if(b->status == BUFFER_FULL){
-        fullSlots = BUFFER_LENGTH;
+        fullSlots = b->length;
     }else{
         /* count the empty slots */
         int16_t index = b->oldest_index;
         
         while(index != b->newest_index){
-            /* index = (index + 1) % BUFFER_LENGTH */
+            /* index = (index + 1) % b->length */
             index++;
-            index &= ~BUFFER_LENGTH;
+            index &= ~b->length;
             fullSlots++;
         }
         
@@ -147,12 +133,44 @@ uint16_t BUF_read(Buffer* b){
 #else
 /* 8 bit wide elements */
 
+BufferStatus BUF_init8(Buffer* b, uint8_t* arr, uint16_t length){
+    b->dataPtr = arr;
+    b->length = length;
+    
+    /* erase the buffer */
+    uint16_t i;
+    for(i = 0; i < length; i++){
+        b->dataPtr[i] = 0;
+    }
+    
+    b->newest_index = 0;
+    b->oldest_index = 0;
+    b->status = BUFFER_EMPTY;
+    
+    /* ensure that the buffer length is a power of 2
+     * so that it conforms to this library */
+    uint16_t possibleLength = 1;
+    uint8_t valueOk = 0;
+    while(possibleLength <= 16384){
+        if(possibleLength == b->length){
+            valueOk = 1;
+            break;
+        }
+        possibleLength = possibleLength << 1;
+    }
+    
+    if(valueOk == 0)
+        while(1);       // programmer's trap to catch errant length values
+    
+    return b->status;
+}
+
 
 BufferStatus BUF_write(Buffer* b, uint8_t writeValue){
     if(b->status != BUFFER_FULL){
-        b->data[b->newest_index] = writeValue;
+        b->dataPtr[b->newest_index] = writeValue;
         b->newest_index += 1;
-        b->newest_index &= ~BUFFER_LENGTH;
+        b->newest_index &= ~b->length;
         
         if(b->newest_index == b->oldest_index)
             b->status = BUFFER_FULL;
@@ -167,9 +185,9 @@ uint8_t BUF_read(Buffer* b){
     uint8_t readValue = 0;
     
     if(b->status != BUFFER_EMPTY){
-        readValue = b->data[b->oldest_index];
+        readValue = b->dataPtr[b->oldest_index];
         b->oldest_index++;
-        b->oldest_index &= ~BUFFER_LENGTH;
+        b->oldest_index &= ~b->length;
         
         if(b->newest_index == b->oldest_index)
             b->status = BUFFER_EMPTY;
@@ -182,18 +200,5 @@ uint8_t BUF_read(Buffer* b){
 
 #endif
 
-/* check to ensure that the buffer length is of an appropriate length */
-#if (   (BUFFER_LENGTH != 1)        \
-         && (BUFFER_LENGTH != 2)  \
-         && (BUFFER_LENGTH != 4)   \
-         && (BUFFER_LENGTH != 8)   \
-         && (BUFFER_LENGTH != 16)  \
-         && (BUFFER_LENGTH != 32)  \
-         && (BUFFER_LENGTH != 64)  \
-         && (BUFFER_LENGTH != 128) \
-         && (BUFFER_LENGTH != 256) \
-         && (BUFFER_LENGTH != 512) \
-         && (BUFFER_LENGTH != 1024))
-#error "BUFFER_LENGTH is not a power of 2"
-#endif
+
 

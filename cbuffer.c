@@ -67,17 +67,15 @@ int32_t BUF_emptySlots(Buffer* b){
         emptySlots = 0;
     }else{
         /* count the empty slots */
-        int16_t index = b->newest_index;
-        
-        while(index != b->oldest_index){
-            /* index = (index + 1) % b->length */
-            index++;
-            index &= ~b->length;
-            emptySlots++;
+        if(b->newest_index > b->oldest_index){
+            emptySlots = (b->length - b->newest_index)
+                        + b->oldest_index;
+        }else{
+            emptySlots = b->oldest_index - b->newest_index;
         }
     }
     
-    return(uint32_t)emptySlots;
+    return emptySlots;
 }
 
 int32_t BUF_fullSlots(Buffer* b){
@@ -88,20 +86,16 @@ int32_t BUF_fullSlots(Buffer* b){
     }else if(b->status == BUFFER_FULL){
         fullSlots = b->length;
     }else{
-        /* count the empty slots */
-        int16_t index = b->oldest_index;
-        
-        while(index != b->newest_index){
-            /* index = (index + 1) % b->length */
-            index++;
-            index &= ~b->length;
-            fullSlots++;
+        /* count the full slots */
+        if(b->oldest_index > b->newest_index){
+            fullSlots = (b->length - b->oldest_index)
+                        + b->newest_index;
+        }else{
+            fullSlots = b->newest_index - b->oldest_index;
         }
-        
-        
     }
     
-    return(uint32_t)fullSlots;
+    return fullSlots;
 }
 
 BufferStatus BUF_write8(Buffer* b, uint8_t writeValue){

@@ -13,7 +13,7 @@ Have a look at the
 along with the [accompanying article](https://hackaday.com/2015/10/29/embed-with-elliot-going-round-with-circular-buffers/).
 
 Additional information specific to this library and the differences
-between it and Elliot's original work may be found at [forembed](http://www.forembed.com/circular-buffers)
+between it and Elliot's original work may be found at [forembed](http://www.forembed.com/circular-buffers.html)
 
 # Status #
 
@@ -22,17 +22,11 @@ At this time, I believe that the library is working well.
 
 # Using this library #
 
-## Generic ##
-
 Copy the *.h and *.c file into your project.  Compile and enjoy.
 
-## Arduino ##
-
-1. Copy the *.h and *.c file into your /sketchbook/libraries/ directory
-2. Rename the *.c file as *.cpp
+An example 'basic_example.c' is contained in the 'examples' directory.
 
 # Future #
 
-It would be nice to have a library - in C - that would support
-different size buffers in the same library.  I know that this is
-possible, but I don't have the time to complete it at the moment.
+Currently, arrays of different widths have their own functions such as 'BUF_read8()' and 'BUF_write8' for
+each width.  I would like to remove this necessity in future iterations of the library.

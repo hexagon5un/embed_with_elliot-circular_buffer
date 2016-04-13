@@ -1,3 +1,5 @@
+![travisci status](https://travis-ci.org/slightlynybbled/circular_buffer.svg?branch=master)
+
 # Purpose #
 
 The purpose of this repository is to replicate the work of Elliot

@@ -21,7 +21,7 @@ void test_init_8(void)
     
     status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 8);
     
-	TEST_ASSERT_EQUAL_INT(BUFFER_FULL, status);
+	TEST_ASSERT_EQUAL_INT(BUFFER_EMPTY, status);
 }
 
 void test_read_empty_8(void){

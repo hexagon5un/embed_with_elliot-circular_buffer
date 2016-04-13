@@ -30,5 +30,5 @@ An example 'basic_example.c' is contained in the 'examples' directory.
 
 # Future #
 
-Currently, arrays of different widths have their own functions such as 'BUF_read8()' and 'BUF_write8()' for
+Currently, arrays of different widths have their own functions such as `BUF_read8()` and `BUF_write8()` for
 each width.  I would like to remove this necessity in future iterations of the library.

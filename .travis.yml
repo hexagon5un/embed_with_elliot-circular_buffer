@@ -1,1 +1,3 @@
 language: c
+
+script: cd test; rake test:all

@@ -27,9 +27,12 @@ int main(void){
     uint8_t i = 0;
     while(BUF_status(&b) != BUFFER_EMPTY){
         /* again, remember to use the proper width! */
-        dataOut = BUF_read8(&b);
+        dataOut[i] = BUF_read8(&b);
         i++;
     }
+    
+    /* now the length of the data that was read is stored in i */
+    dataOutLength = i;  
     
     return 0;
 }

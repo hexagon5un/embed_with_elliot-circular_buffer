@@ -1,0 +1,3 @@
+language: c
+
+script: cd test; mkdir test/support; mkdir build; rake test:all

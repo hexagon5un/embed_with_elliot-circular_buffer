@@ -19,7 +19,7 @@ void test_init_32(void)
     Buffer b;
     BufferStatus status;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
 	TEST_ASSERT_EQUAL_INT(BUFFER_EMPTY, status);
 }
@@ -29,7 +29,7 @@ void test_read_empty_32(void){
     Buffer b;
     BufferStatus status;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     uint32_t data = 100;
     data = BUF_read32(&b);
@@ -42,7 +42,7 @@ void test_write_to_almost_full_32(void){
     Buffer b;
     BufferStatus status;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     int i;
     for(i = 0; i < (BUFFER_ARRAY_LENGTH - 1); i++){
@@ -57,7 +57,7 @@ void test_write_to_full_32(void){
     Buffer b;
     BufferStatus status;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     int i;
     for(i = 0; i < BUFFER_ARRAY_LENGTH; i++){
@@ -73,7 +73,7 @@ void test_write_to_full_read_to_empty_32(void){
     BufferStatus status;
     uint32_t data;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     int i;
     for(i = 0; i < BUFFER_ARRAY_LENGTH; i++){
@@ -98,7 +98,7 @@ void test_write3_read3_32(void){
     BufferStatus status;
     uint32_t data;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     int i;
     for(i = 0; i < 3; i++){
@@ -124,7 +124,7 @@ void test_write_overflow_32(void){
     BufferStatus status;
     uint32_t data;
     
-    status = BUF_init(&b, &bufferArray, BUFFER_ARRAY_LENGTH, 32);
+    status = BUF_init(&b, bufferArray, BUFFER_ARRAY_LENGTH, 32);
     
     int i;
     for(i = 0; i < 10; i++){

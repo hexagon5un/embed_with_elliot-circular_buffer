@@ -4,6 +4,7 @@ BufferStatus BUF_init(Buffer* b, void* arr, uint16_t length, uint8_t width){
     /* ensure that the length is a power of 2 */
     uint8_t lengthOk = 0;
     uint16_t possibleLength = 1;
+    uint16_t i;
     while(possibleLength < 16384){
         if(possibleLength == length){
             lengthOk = 1;
@@ -20,7 +21,6 @@ BufferStatus BUF_init(Buffer* b, void* arr, uint16_t length, uint8_t width){
         b->dataPtr = dataBuf;
         
         /* erase the buffer */
-        uint16_t i;
         for(i = 0; i < length; i++){
             dataBuf[i] = 0;
         }

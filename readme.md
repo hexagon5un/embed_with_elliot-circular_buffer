@@ -28,6 +28,12 @@ Copy the *.h and *.c file into your project.  Compile and enjoy.
 
 An example 'basic_example.c' is contained in the 'examples' directory.
 
+# How it works #
+
+Assuming an 8-element circular buffer:
+
+![circular buffer](http://www.forembed.com/images/2016/03/circ_buffer.gif)
+
 # Future #
 
 Currently, arrays of different widths have their own functions such as `BUF_read8()` and `BUF_write8()` for

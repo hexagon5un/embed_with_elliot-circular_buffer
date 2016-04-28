@@ -45,17 +45,7 @@ BufferStatus BUF_init(Buffer* b, void* arr, uint16_t length, uint8_t width){
 }
 
 BufferStatus BUF_status(Buffer* b){
-    BufferStatus status;
-    
-    if(b->newest_index == b->oldest_index){
-        status = BUFFER_EMPTY;
-    }else if(((b->newest_index + 1) & ~b->length) == b->oldest_index){
-        status = BUFFER_FULL;
-    }else{
-        status = BUFFER_OK;
-    }
-    
-    return status;
+    return b->status;
 }
 
 int32_t BUF_emptySlots(Buffer* b){

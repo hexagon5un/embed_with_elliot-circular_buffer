@@ -47,6 +47,17 @@ void test_write_to_full_8(void){
 	TEST_ASSERT_EQUAL_INT(BUFFER_FULL, status);
 }
 
+void test_write_to_full_8_status(void){
+    int i;
+    for(i = 0; i < BUFFER_ARRAY_LENGTH; i++){
+        BUF_write8(&b, 1);
+    }
+    
+    status = BUF_status(&b);
+    
+	TEST_ASSERT_EQUAL_INT(BUFFER_FULL, status);
+}
+
 void test_write_to_full_read_to_empty_8(void){
     uint8_t data;
     

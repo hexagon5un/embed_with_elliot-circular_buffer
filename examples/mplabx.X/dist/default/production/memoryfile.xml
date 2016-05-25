@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/default/production/mplabx.X.production.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>8192</length>
+      <used>230</used>
+      <free>7962</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>33018</length>
+      <used>9216</used>
+      <free>23802</free>
+    </memory>
+  </executable>
+</project>

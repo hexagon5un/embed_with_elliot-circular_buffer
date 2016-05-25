@@ -1,41 +1,13 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "USART.h"
+#include "cbuffer.h"
 
-#define BUFFER_SIZE  16
-
-enum BufferStatus {BUFFER_OK, BUFFER_EMPTY, BUFFER_FULL};
-
-struct Buffer {
-	uint8_t data[BUFFER_SIZE];
-	uint8_t newest_index;
-	uint8_t oldest_index;
-};
-struct Buffer buffer = {{}, 0, 0};
-
-enum BufferStatus bufferWrite(uint8_t byte){
-	uint8_t next_index = (buffer.newest_index+1) % BUFFER_SIZE;
-
-	if (next_index == buffer.oldest_index){
-		return BUFFER_FULL;
-	}
-	buffer.data[buffer.newest_index] = byte;
-	buffer.newest_index = next_index;
-	return BUFFER_OK;
-}
-
-enum BufferStatus bufferRead(uint8_t *byte){
-	if (buffer.newest_index == buffer.oldest_index){
-		return BUFFER_EMPTY;
-	}
-	*byte = buffer.data[buffer.oldest_index];
-	buffer.oldest_index = (buffer.oldest_index+1) % BUFFER_SIZE;
-	return BUFFER_OK;
-}
+Buffer buffer;
 
 void dumpBuffer(void){
-
-	for (uint8_t i=0; i<BUFFER_SIZE; i++){
+        uint8_t i;
+	for (i=0; i<BUFFER_LENGTH; i++){
 		if (buffer.oldest_index == buffer.newest_index && buffer.newest_index == i){
 			transmitByte('=');
 		} else  if (buffer.oldest_index == i){
@@ -48,7 +20,7 @@ void dumpBuffer(void){
 	}
 	printString("\n");
 
-	for (uint8_t i=0; i<BUFFER_SIZE; i++){
+	for (i=0; i<BUFFER_LENGTH; i++){
 			transmitByte(buffer.data[i]);
 	}
 	printString("\n");
@@ -70,14 +42,14 @@ int main(void) {
 		uint8_t coolString[] = "Howdy";
 		i = 0;
 		while(i < sizeof(coolString) - 1){
-			bufferWrite(coolString[i]);
+			BUF_write(&buffer, coolString[i]);
 			++i;
 			dumpBuffer();
 		}
 
 		printString("  Demo: reading out the first three characters\n");
 		for (i = 0; i<3 ; i++){	
-			bufferRead(&tempCharStorage);
+			BUF_read(&buffer, &tempCharStorage);
 			transmitByte(tempCharStorage);	
 			printString("\n");
 			dumpBuffer();
@@ -87,14 +59,14 @@ int main(void) {
 		uint8_t anotherString[] = "Hello";	
 		i = 0;
 		while(i < sizeof(anotherString) - 1){
-			bufferWrite(anotherString[i]);
+			BUF_write(&buffer, anotherString[i]);
 			++i;
 			dumpBuffer();
 		}
 
 		// And read it back out using return code
 		printString("  Demo: reading everything back out\n");
-		while (bufferRead(&tempCharStorage) == BUFFER_OK){
+		while (BUF_read(&buffer, &tempCharStorage) == BUFFER_OK){
 			transmitByte(tempCharStorage);	
 		}
 		printString("\n");
@@ -104,7 +76,7 @@ int main(void) {
 
 		// Fill up buffer, using return code
 		i = 0;
-		while(bufferWrite('A'+i) == BUFFER_OK){
+		while(BUF_write(&buffer, 'A'+i) == BUFFER_OK){
 			++i;
 			dumpBuffer();
 		}

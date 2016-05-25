@@ -19,8 +19,7 @@ between it and Elliot's original work may be found at [forembed](http://www.fore
 
 # Status #
 
-This library is useful for creating one or more circular buffers.
-At this time, I believe that the library is working well.
+Library is 100% tested using TravisCI tools.  Thanks, guys!
 
 # Using this library #
 
